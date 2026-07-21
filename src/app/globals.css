@@ -10,6 +10,7 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #FFFBF5;
 }
 
 body {
@@ -18,4 +19,37 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #FFFBF5 0%, #FFF8F0 100%);
+  color: #5a4a3a;
+  min-height: 100vh;
 }
+
+/* Warm accent styles */
+::selection {
+  background-color: #FF9D66;
+  color: white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFF8F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFB399;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF9D66;
+}
+
+/* Smooth transitions */
+button, a {
+  transition: all 0.2s ease-in-out;
+}
+

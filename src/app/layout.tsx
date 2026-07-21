@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'ScholarSync | Browse Scholarships & Competitions',
-  description: 'Discover scholarships and competitions tailored to your interests',
+  title: 'ScholarSync | Discover Your Perfect Scholarship',
+  description: 'Find and apply to scholarships tailored to your dreams and ambitions',
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50">{children}</body>
+      <body className="bg-cream">{children}</body>
     </html>
   );
 }
