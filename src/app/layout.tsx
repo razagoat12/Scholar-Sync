@@ -1,5 +1,20 @@
 import type { Metadata } from 'next';
+import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
+import { AuthProvider } from '@/contexts/AuthContext';
+import Nav from '@/components/Nav';
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'ScholarSync | Discover Your Perfect Scholarship',
@@ -12,8 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-cream">{children}</body>
+    <html lang="en" className={`dark ${fraunces.variable} ${inter.variable}`}>
+      <body className="bg-base text-ink font-sans antialiased">
+        <AuthProvider>
+          <Nav />
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }

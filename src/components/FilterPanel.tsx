@@ -1,19 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import { Search, BookOpen, GraduationCap, Globe2, Clock, ChevronDown, X, SlidersHorizontal } from 'lucide-react';
 
 export interface EnhancedFilterPanelProps {
   academicFields: string[];
   educationLevels: string[];
   countries: string[];
-  
+
   // Selected filters
   selectedFields: string[];
   selectedLevels: string[];
   selectedCountries: string[];
   deadlineWithinDays?: number;
   searchQuery?: string;
-  
+
   // Callbacks
   onFieldChange: (fields: string[]) => void;
   onLevelChange: (levels: string[]) => void;
@@ -21,7 +22,7 @@ export interface EnhancedFilterPanelProps {
   onDeadlineChange: (days: number | undefined) => void;
   onSearchChange: (query: string) => void;
   onReset: () => void;
-  
+
   // Optional: Show filter counts
   filterCounts?: {
     fields: Record<string, number>;
@@ -78,207 +79,111 @@ export default function FilterPanel({
     (searchQuery ? 1 : 0);
 
   return (
-    <div className="bg-white border border-warm-peach rounded-2xl mb-8 shadow-md">
+    <div className="bg-surface border border-border rounded-2xl mb-8">
       {/* Filter Header */}
-      <div
-        className="p-6 flex items-center justify-between cursor-pointer hover:bg-cream-light transition-colors"
+      <button
+        type="button"
+        className="w-full p-6 flex items-center justify-between hover:bg-surface-2 transition-colors cursor-pointer rounded-2xl"
         onClick={() => setExpanded(!expanded)}
       >
-        <div>
-          <h2 className="text-xl font-bold text-warm-brown">🔍 Refine Your Search</h2>
-          {totalActiveFilters > 0 && (
-            <p className="text-sm text-warm-orange mt-1 font-medium">
-              ✨ {totalActiveFilters} filter{totalActiveFilters !== 1 ? 's' : ''} active
-            </p>
-          )}
+        <div className="flex items-center gap-3">
+          <SlidersHorizontal className="w-5 h-5 text-muted" strokeWidth={2} />
+          <div className="text-left">
+            <h2 className="font-display text-lg font-semibold text-ink">Refine Your Search</h2>
+            {totalActiveFilters > 0 && (
+              <p className="text-sm text-lime mt-0.5 font-medium">
+                {totalActiveFilters} filter{totalActiveFilters !== 1 ? 's' : ''} active
+              </p>
+            )}
+          </div>
         </div>
-        <button
-          className={`text-warm-brown transition-transform duration-300 text-xl ${expanded ? 'rotate-180' : ''}`}
-          type="button"
-        >
-          ▼
-        </button>
-      </div>
+        <ChevronDown
+          className={`w-5 h-5 text-muted transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+          strokeWidth={2}
+        />
+      </button>
 
-      {/* Active Filters (Sticky tags) */}
+      {/* Active Filters */}
       {totalActiveFilters > 0 && (
-        <div className="border-t border-warm-peach px-6 py-3 bg-warm-orange bg-opacity-10 flex flex-wrap gap-2">
+        <div className="border-t border-border px-6 py-3 flex flex-wrap items-center gap-2">
           {searchQuery && (
-            <div className="inline-flex items-center gap-2 bg-warm-orange bg-opacity-25 text-warm-orange px-3 py-1 rounded-full text-sm font-medium border border-warm-orange border-opacity-40">
-              🔍 {searchQuery}
-              <button
-                onClick={() => onSearchChange('')}
-                className="hover:text-warm-terracotta font-bold ml-1"
-              >
-                ✕
-              </button>
-            </div>
+            <FilterChip label={searchQuery} onRemove={() => onSearchChange('')} />
           )}
-          
           {selectedFields.map((field) => (
-            <div
-              key={field}
-              className="inline-flex items-center gap-2 bg-warm-orange bg-opacity-25 text-warm-orange px-3 py-1 rounded-full text-sm font-medium border border-warm-orange border-opacity-40"
-            >
-              📚 {field}
-              <button
-                onClick={() => handleFieldToggle(field)}
-                className="hover:text-warm-terracotta font-bold ml-1"
-              >
-                ✕
-              </button>
-            </div>
+            <FilterChip key={field} label={field} onRemove={() => handleFieldToggle(field)} />
           ))}
-          
           {selectedLevels.map((level) => (
-            <div
-              key={level}
-              className="inline-flex items-center gap-2 bg-warm-gold bg-opacity-25 text-warm-brown px-3 py-1 rounded-full text-sm font-medium border border-warm-gold border-opacity-40"
-            >
-              🎓 {level}
-              <button
-                onClick={() => handleLevelToggle(level)}
-                className="hover:text-warm-terracotta font-bold ml-1"
-              >
-                ✕
-              </button>
-            </div>
+            <FilterChip key={level} label={level} onRemove={() => handleLevelToggle(level)} />
           ))}
-          
           {selectedCountries.map((country) => (
-            <div
-              key={country}
-              className="inline-flex items-center gap-2 bg-warm-terracotta bg-opacity-25 text-warm-terracotta px-3 py-1 rounded-full text-sm font-medium border border-warm-terracotta border-opacity-40"
-            >
-              🌍 {country}
-              <button
-                onClick={() => handleCountryToggle(country)}
-                className="hover:text-warm-orange font-bold ml-1"
-              >
-                ✕
-              </button>
-            </div>
+            <FilterChip key={country} label={country} onRemove={() => handleCountryToggle(country)} />
           ))}
-          
           {deadlineWithinDays && (
-            <div className="inline-flex items-center gap-2 bg-warm-brown bg-opacity-15 text-warm-brown px-3 py-1 rounded-full text-sm font-medium border border-warm-brown border-opacity-30">
-              ⏰ Within {deadlineWithinDays} days
-              <button
-                onClick={() => onDeadlineChange(undefined)}
-                className="hover:text-warm-orange font-bold ml-1"
-              >
-                ✕
-              </button>
-            </div>
+            <FilterChip
+              label={`Within ${deadlineWithinDays} days`}
+              onRemove={() => onDeadlineChange(undefined)}
+            />
           )}
-
-          {totalActiveFilters > 0 && (
-            <button
-              onClick={onReset}
-              className="text-warm-terracotta hover:text-warm-orange text-sm font-bold ml-auto"
-            >
-              Clear all
-            </button>
-          )}
+          <button
+            onClick={onReset}
+            className="text-muted hover:text-ink text-sm font-medium ml-auto cursor-pointer"
+          >
+            Clear all
+          </button>
         </div>
       )}
 
-      {/* Filter Options (Expandable) */}
+      {/* Filter Options */}
       {expanded && (
-        <div className="border-t border-warm-peach p-6 space-y-6">
+        <div className="border-t border-border p-6 space-y-6">
           {/* Search */}
           <div>
-            <label className="block text-sm font-bold text-warm-brown mb-2">
-              🔍 Search
+            <label className="flex items-center gap-2 text-sm font-semibold text-ink mb-2">
+              <Search className="w-4 h-4" strokeWidth={2} />
+              Search
             </label>
             <input
               type="text"
               value={searchQuery || ''}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search by title, field, or provider..."
-              className="w-full px-4 py-2 border border-warm-peach rounded-lg focus:ring-2 focus:ring-warm-orange focus:border-warm-orange outline-none transition bg-cream-light text-warm-brown placeholder-warm-brown placeholder-opacity-40"
+              className="w-full px-4 py-2.5 bg-surface-2 border border-border rounded-xl focus:ring-2 focus:ring-lime focus:border-lime outline-none transition text-ink placeholder-muted"
             />
           </div>
 
-          {/* Academic Fields */}
-          <div>
-            <label className="block text-sm font-bold text-warm-brown mb-3">
-              📚 Academic Field
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              {academicFields.map((field) => (
-                <label key={field} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
-                  <input
-                    type="checkbox"
-                    checked={selectedFields.includes(field)}
-                    onChange={() => handleFieldToggle(field)}
-                    className="w-4 h-4 rounded border-warm-orange accent-warm-orange cursor-pointer"
-                  />
-                  <span className="text-sm text-warm-brown">
-                    {field}
-                    {filterCounts?.fields?.[field] && (
-                      <span className="text-warm-brown text-opacity-60 ml-1">({filterCounts.fields[field]})</span>
-                    )}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
+          <FilterGroup
+            icon={<BookOpen className="w-4 h-4" strokeWidth={2} />}
+            label="Academic Field"
+            items={academicFields}
+            selected={selectedFields}
+            counts={filterCounts?.fields}
+            onToggle={handleFieldToggle}
+          />
 
-          {/* Education Level */}
-          <div>
-            <label className="block text-sm font-bold text-warm-brown mb-3">
-              🎓 Education Level
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              {educationLevels.map((level) => (
-                <label key={level} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
-                  <input
-                    type="checkbox"
-                    checked={selectedLevels.includes(level)}
-                    onChange={() => handleLevelToggle(level)}
-                    className="w-4 h-4 rounded border-warm-gold accent-warm-gold cursor-pointer"
-                  />
-                  <span className="text-sm text-warm-brown">
-                    {level}
-                    {filterCounts?.levels?.[level] && (
-                      <span className="text-warm-brown text-opacity-60 ml-1">({filterCounts.levels[level]})</span>
-                    )}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
+          <FilterGroup
+            icon={<GraduationCap className="w-4 h-4" strokeWidth={2} />}
+            label="Education Level"
+            items={educationLevels}
+            selected={selectedLevels}
+            counts={filterCounts?.levels}
+            onToggle={handleLevelToggle}
+          />
 
-          {/* Countries */}
-          <div>
-            <label className="block text-sm font-bold text-warm-brown mb-3">
-              🌍 Country
-            </label>
-            <div className="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-2">
-              {countries.map((country) => (
-                <label key={country} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
-                  <input
-                    type="checkbox"
-                    checked={selectedCountries.includes(country)}
-                    onChange={() => handleCountryToggle(country)}
-                    className="w-4 h-4 rounded border-warm-terracotta accent-warm-terracotta cursor-pointer"
-                  />
-                  <span className="text-sm text-warm-brown">
-                    {country}
-                    {filterCounts?.countries?.[country] && (
-                      <span className="text-warm-brown text-opacity-60 ml-1">({filterCounts.countries[country]})</span>
-                    )}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
+          <FilterGroup
+            icon={<Globe2 className="w-4 h-4" strokeWidth={2} />}
+            label="Country"
+            items={countries}
+            selected={selectedCountries}
+            counts={filterCounts?.countries}
+            onToggle={handleCountryToggle}
+            scrollable
+          />
 
           {/* Deadline Proximity */}
           <div>
-            <label className="block text-sm font-bold text-warm-brown mb-3">
-              ⏰ Deadline Proximity
+            <label className="flex items-center gap-2 text-sm font-semibold text-ink mb-3">
+              <Clock className="w-4 h-4" strokeWidth={2} />
+              Deadline Proximity
             </label>
             <div className="space-y-2">
               {[
@@ -287,31 +192,85 @@ export default function FilterPanel({
                 { label: 'Within 60 days', value: 60 },
                 { label: 'No deadline filter', value: undefined },
               ].map(({ label, value }) => (
-                <label key={label} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
+                <label key={label} className="flex items-center gap-2 cursor-pointer group">
                   <input
                     type="radio"
                     name="deadline"
                     checked={deadlineWithinDays === value}
                     onChange={() => onDeadlineChange(value)}
-                    className="w-4 h-4 border-warm-brown accent-warm-brown cursor-pointer"
+                    className="w-4 h-4 accent-lime cursor-pointer"
                   />
-                  <span className="text-sm text-warm-brown">{label}</span>
+                  <span className="text-sm text-muted group-hover:text-ink transition-colors">{label}</span>
                 </label>
               ))}
             </div>
           </div>
 
           {/* Reset Button */}
-          <div className="pt-4 border-t border-warm-peach">
+          <div className="pt-4 border-t border-border">
             <button
               onClick={onReset}
-              className="w-full px-4 py-3 bg-gradient-to-r from-warm-orange to-warm-gold hover:shadow-lg text-white font-bold rounded-lg transition-all duration-300"
+              className="w-full px-4 py-3 bg-lime hover:bg-lime-400 text-base font-semibold rounded-xl transition-all cursor-pointer"
             >
               Reset All Filters
             </button>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+  return (
+    <div className="inline-flex items-center gap-1.5 bg-lime-dim text-lime px-3 py-1 rounded-full text-sm font-medium border border-lime/30">
+      {label}
+      <button onClick={onRemove} aria-label={`Remove ${label} filter`} className="hover:text-ink cursor-pointer">
+        <X className="w-3.5 h-3.5" strokeWidth={2.5} />
+      </button>
+    </div>
+  );
+}
+
+function FilterGroup({
+  icon,
+  label,
+  items,
+  selected,
+  counts,
+  onToggle,
+  scrollable,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  items: string[];
+  selected: string[];
+  counts?: Record<string, number>;
+  onToggle: (item: string) => void;
+  scrollable?: boolean;
+}) {
+  return (
+    <div>
+      <label className="flex items-center gap-2 text-sm font-semibold text-ink mb-3">
+        {icon}
+        {label}
+      </label>
+      <div className={`grid grid-cols-2 gap-3 ${scrollable ? 'max-h-48 overflow-y-auto pr-2' : ''}`}>
+        {items.map((item) => (
+          <label key={item} className="flex items-center gap-2 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={selected.includes(item)}
+              onChange={() => onToggle(item)}
+              className="w-4 h-4 rounded accent-lime cursor-pointer"
+            />
+            <span className="text-sm text-muted group-hover:text-ink transition-colors">
+              {item}
+              {counts?.[item] && <span className="text-muted/70 ml-1">({counts[item]})</span>}
+            </span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 }

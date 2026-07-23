@@ -6,32 +6,44 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Warm indie palette inspired by Claude
-        cream: '#FFFBF5',
-        'cream-light': '#FFF8F0',
-        'warm-peach': '#FFE4D1',
-        'warm-orange': '#FF9D66',
-        'warm-orange-light': '#FFB399',
-        'warm-gold': '#E8BC5C',
-        'warm-brown': '#8B6F47',
-        'warm-brown-light': '#9C7D5C',
-        'warm-terracotta': '#D97A57',
+        // Near-black dark theme with an acid-lime accent
+        base: '#0A0A0F',
+        surface: '#141418',
+        'surface-2': '#1B1B21',
+        'surface-3': '#232329',
+        border: 'rgba(255,255,255,0.08)',
+        'border-strong': 'rgba(255,255,255,0.16)',
+        ink: '#F4F4F5',
+        muted: '#9C9CA8',
+        lime: {
+          DEFAULT: '#B6FF3B',
+          dim: 'rgba(182,255,59,0.14)',
+          400: '#C2FF5C',
+          500: '#B6FF3B',
+          600: '#9BE01F',
+        },
+        danger: '#FF5C5C',
+      },
+      fontFamily: {
+        display: ['var(--font-fraunces)', 'serif'],
+        sans: ['var(--font-inter)', 'sans-serif'],
       },
       animation: {
-        'float': 'float 3s ease-in-out infinite',
-        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'slide-up': 'slideUp 0.3s ease-out',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
         fadeIn: {
           from: { opacity: '0' },
           to: { opacity: '1' },
+        },
+        slideUp: {
+          from: { opacity: '0', transform: 'translateY(8px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
         },
       },
     },
